@@ -80,6 +80,12 @@ def sentence_division(tokens, abbrev, pn_abbrev, names):
   return tokens
 
 def punctuation_tokenize(tokens, abbrev, pn_abbrev):
+  '''
+  Takes a list of tokens, separate punctuations and clitics
+
+  ATM the logic will separate can't to ['ca', 'n't'] or
+  won't to ['wo', 'n't'], might need to find a better way
+  '''
   new_tokens = []
   # TODO: implement clitics
   for i, token in enumerate(tokens):
@@ -92,6 +98,17 @@ def punctuation_tokenize(tokens, abbrev, pn_abbrev):
     elif token.endswith(".") and not (token.lower() in abbrev or token.lower() in pn_abbrev):
       new_tokens.append(token[:-1])
       new_tokens.append(token[-1])
+    # Start litics logic
+    elif token.endswith("'s"):
+      new_tokens.append(token[:-2])
+      new_tokens.append(token[-2:])
+    elif token.endswith("'ll"):
+      new_tokens.append(token[:-3])
+      new_tokens.append(token[-3:])
+    elif token.find("'") == len(token) - 2:
+      new_tokens.append(token[:-3])
+      new_tokens.append(token[-3:])
+    # End clitics logic
     else:
       new_tokens.append(token)
   return new_tokens
