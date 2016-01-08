@@ -1,2 +1,6 @@
 *.txt
 *.py~
+*.pyc
+*.english
+BarackObama
+processed/

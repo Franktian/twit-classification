@@ -119,8 +119,6 @@ def main(argv):
   # Load tagger
   tagger = NLPlib.NLPlib()
 
-  for word in pn_abbrev:
-    print word
   with open (raw_file, 'rU') as file:
     for line in file:
       lines = parse_line(line, abbrev, pn_abbrev, names, tagger)
