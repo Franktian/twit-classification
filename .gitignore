@@ -1,0 +1,6 @@
+*.txt
+*.py~
+NLPlib.py
+MakeLex.py
+_nlplib_pyc.zip
+pickledlexicon
