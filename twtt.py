@@ -75,8 +75,8 @@ def sentence_division(tokens, abbrev, pn_abbrev, names):
                              and not token.lower() in pn_abbrev:
       tokens.insert(i + 1, "**")
     elif token.endswith(("!", "?")) and i + 1 < len(tokens):
-      if not (tokens[i + 1][0].islower() or tokens[i + 1].lower() in names):
-        tokens.insert(i + 1, "**")
+      #if not (tokens[i + 1][0].islower() or tokens[i + 1].lower() in names):
+      tokens.insert(i + 1, "**")
   return tokens
 
 def punctuation_tokenize(tokens, abbrev, pn_abbrev):
