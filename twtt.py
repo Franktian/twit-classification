@@ -27,6 +27,9 @@ def parse_line(line, abbrev, pn_abbrev, names, tagger):
   # (@) and hash tags (#) are removed
   tokens = map(process_hash, tokens)
 
+  # Remove empty token
+  tokens = filter(not_empty, tokens)
+
   # Place sentence boundary
   tokens = sentence_division(tokens, abbrev, pn_abbrev, names)
 
@@ -53,6 +56,9 @@ def process_hash(token):
     return token[1:]
   return token
 
+def not_empty(token):
+  return len(token) > 0
+
 def sentence_division(tokens, abbrev, pn_abbrev, names):
   '''
   Implement heuristic sentence boundary
@@ -75,8 +81,8 @@ def sentence_division(tokens, abbrev, pn_abbrev, names):
                              and not token.lower() in pn_abbrev:
       tokens.insert(i + 1, "**")
     elif token.endswith(("!", "?")) and i + 1 < len(tokens):
-      #if not (tokens[i + 1][0].islower() or tokens[i + 1].lower() in names):
-      tokens.insert(i + 1, "**")
+      if not (tokens[i + 1][0].islower() or tokens[i + 1].lower() in names):
+        tokens.insert(i + 1, "**")
   return tokens
 
 def punctuation_tokenize(tokens, abbrev, pn_abbrev):
