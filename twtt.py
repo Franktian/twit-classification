@@ -126,11 +126,11 @@ def main(argv):
   result_output = open(result_file, 'w')
 
   # Load resources
-  abbrev = load_helper("abbrev.english")
-  pn_abbrev = load_helper("pn_abbrev.english")
-  male_names = load_helper("maleFirstNames.txt")
-  female_names = load_helper("femaleFirstNames.txt")
-  last_names = load_helper("lastNames.txt")
+  abbrev = load_helper("/u/cs401/Wordlists/abbrev.english")
+  pn_abbrev = load_helper("/u/cs401/Wordlists/pn_abbrev.english")
+  male_names = load_helper("/u/cs401/Wordlists/maleFirstNames.txt")
+  female_names = load_helper("/u/cs401/Wordlists/femaleFirstNames.txt")
+  last_names = load_helper("/u/cs401/Wordlists/lastNames.txt")
   names = male_names + female_names + last_names
 
   # Load tagger
