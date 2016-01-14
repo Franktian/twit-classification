@@ -36,7 +36,7 @@ def parse_line(line, abbrev, pn_abbrev, names, tagger):
   # Tokenize punctuation and clitics
   tokens = punctuation_tokenize(tokens, abbrev, pn_abbrev)
 
-  # Tag the token
+  # Tag the token with its part-of-speech
   tags = tagger.tag(tokens)
   tagged_tokens = []
 
@@ -89,15 +89,15 @@ def punctuation_tokenize(tokens, abbrev, pn_abbrev):
   '''
   Takes a list of tokens, separate punctuations and clitics
 
-  ATM the logic will separate can't to ['ca', 'n't'] or
-  won't to ['wo', 'n't'], might need to find a better way
   '''
   new_tokens = []
-  # TODO: implement clitics
   for i, token in enumerate(tokens):
     if token.startswith(("'", "(", "$")):
       new_tokens.append(token[0])
       new_tokens.append(token[1:])
+    elif token.endswith(("..", "!!")):
+      # Do not split multiple punctuations
+      new_tokens.append(token)
     elif token.endswith((":", ";", ",", "'", ")", "?", "!")):
       new_tokens.append(token[:-1])
       new_tokens.append(token[-1])
@@ -105,6 +105,15 @@ def punctuation_tokenize(tokens, abbrev, pn_abbrev):
       new_tokens.append(token[:-1])
       new_tokens.append(token[-1])
     # Start litics logic
+    elif token.endswith("won't"):
+      new_tokens.append("will")
+      new_tokens.append("n't")
+    elif token.endswith("can't"):
+      new_tokens.append("can")
+      new_tokens.append("n't")
+    elif token.endswith("ain't"):
+      new_tokens.append("are")
+      new_tokens.append("n't")
     elif token.endswith("'s"):
       new_tokens.append(token[:-2])
       new_tokens.append(token[-2:])
