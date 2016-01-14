@@ -31,10 +31,10 @@ def main(argv):
   max_tweets = sys.maxint
 
   # load word lists
-  fp = load_helper("First-person")
-  sp = load_helper("Second-person")
-  tp = load_helper("Third-person")
-  sl = load_helper("Slang")
+  fp = load_helper("/u/cs401/Wordlists/First-person")
+  sp = load_helper("/u/cs401/Wordlists/Second-person")
+  tp = load_helper("/u/cs401/Wordlists/Third-person")
+  sl = load_helper("/u/cs401/Wordlists/Slang")
   words = {
     "fp": fp,
     "sp": sp,
