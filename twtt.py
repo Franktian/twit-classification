@@ -123,6 +123,15 @@ def load_helper(file_name):
   with open(file_name, 'rU') as file:
     return [line.strip().lower() for line in file]
 
+def remove_double_quotes(line):
+  '''
+  Take a string and removes double quotes
+
+  >remove_double_quotes(""Hello"")
+  Hello
+  '''
+  return line.replace("\"", "")
+
 def main(argv):
   '''
   Main method, responsible for parsing system args
@@ -150,7 +159,7 @@ def main(argv):
 
   with open (raw_file, 'rU') as file:
     for i, line in enumerate(file):
-      line = line.split(",")[-1]
+      line = remove_double_quotes(line.split(",")[-1])
 
       # Class 1 tweets
       if i < class_one_end and i >= class_one_start:
