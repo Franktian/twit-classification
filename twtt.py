@@ -140,6 +140,12 @@ def main(argv):
   result_file = argv[1]
   result_output = open(result_file, 'w')
 
+  gid = 1
+  class_one_start = gid * 5500
+  class_one_end = (gid + 1) * 5500 - 1
+  class_four_start = class_one_start + 800000
+  class_four_end = class_one_end + 800000
+
   # Load resources
   abbrev = load_helper("/u/cs401/Wordlists/abbrev.english")
   pn_abbrev = load_helper("/u/cs401/Wordlists/pn_abbrev.english")
@@ -152,11 +158,15 @@ def main(argv):
   tagger = NLPlib.NLPlib()
 
   with open (raw_file, 'rU') as file:
-    for line in file:
-      lines = parse_line(line, abbrev, pn_abbrev, names, tagger)
-      for l in lines:
-        result_output.write(l + "\n")
-      result_output.write("|\n")
+    for i, line in enumerate(file):
+      if i < class_one_end and i >= class_one_start:
+        print i
+      if i < class_four_end and i >= class_four_start:
+        print i
+      #lines = parse_line(line, abbrev, pn_abbrev, names, tagger)
+      #for l in lines:
+        #result_output.write(l + "\n")
+      #result_output.write("|\n")
 
 if __name__ == '__main__':
   main(sys.argv[1:])
