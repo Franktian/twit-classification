@@ -105,15 +105,6 @@ def punctuation_tokenize(tokens, abbrev, pn_abbrev):
       new_tokens.append(token[:-1])
       new_tokens.append(token[-1])
     # Start litics logic
-    elif token.endswith("won't"):
-      new_tokens.append("will")
-      new_tokens.append("n't")
-    elif token.endswith("can't"):
-      new_tokens.append("can")
-      new_tokens.append("n't")
-    elif token.endswith("ain't"):
-      new_tokens.append("are")
-      new_tokens.append("n't")
     elif token.endswith("'s"):
       new_tokens.append(token[:-2])
       new_tokens.append(token[-2:])
@@ -159,14 +150,21 @@ def main(argv):
 
   with open (raw_file, 'rU') as file:
     for i, line in enumerate(file):
+      line = line.split(",")[-1]
+
+      # Class 1 tweets
       if i < class_one_end and i >= class_one_start:
-        print i
+        lines = parse_line(line, abbrev, pn_abbrev, names, tagger)
+        result_output.write("<A=1>\n")
+        for l in lines:
+          result_output.write(l + "\n")
+
+      # Class 4 tweets
       if i < class_four_end and i >= class_four_start:
-        print i
-      #lines = parse_line(line, abbrev, pn_abbrev, names, tagger)
-      #for l in lines:
-        #result_output.write(l + "\n")
-      #result_output.write("|\n")
+        lines = parse_line(line, abbrev, pn_abbrev, names, tagger)
+        result_output.write("<A=4>\n")
+        for l in lines:
+          result_output.write(l + "\n")
 
 if __name__ == '__main__':
   main(sys.argv[1:])
