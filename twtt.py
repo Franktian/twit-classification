@@ -92,13 +92,13 @@ def punctuation_tokenize(tokens, abbrev, pn_abbrev):
   '''
   new_tokens = []
   for i, token in enumerate(tokens):
-    if token.startswith(("'", "(", "$")):
+    if token.startswith(("'", "(", "$", "\"")):
       new_tokens.append(token[0])
       new_tokens.append(token[1:])
-    elif token.endswith(("..", "!!")):
+    elif token.endswith(("..", "!!", "?!", "!?")):
       # Do not split multiple punctuations
       new_tokens.append(token)
-    elif token.endswith((":", ";", ",", "'", ")", "?", "!")):
+    elif token.endswith((":", ";", ",", "'", "\"", ")", "?", "!")):
       new_tokens.append(token[:-1])
       new_tokens.append(token[-1])
     elif token.endswith(".") and not (token.lower() in abbrev or token.lower() in pn_abbrev):
