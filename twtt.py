@@ -108,7 +108,7 @@ def punctuation_tokenize(tokens, abbrev, pn_abbrev):
     elif token.endswith("'s"):
       new_tokens.append(token[:-2])
       new_tokens.append(token[-2:])
-    elif token.endswith("'ll"):
+    elif token.endswith(("'ll", "'ve")):
       new_tokens.append(token[:-3])
       new_tokens.append(token[-3:])
     elif token.find("'") == len(token) - 2:
@@ -136,24 +136,19 @@ def main(argv):
   '''
   Main method, responsible for parsing system args
   '''
-  if len(argv) == 3:
-    use_group = True
-  elif len(argv) == 2:
-    use_group = False
-  else:
+  if len(argv) != 3:
     print "Wrong parameters specified"
     return
 
   raw_file = argv[0]
-  result_file = argv[-1]
+  result_file = argv[2]
   result_output = open(result_file, 'w')
 
-  if use_group:
-    gid = int(argv[1])
-    class_one_start = gid * 5500
-    class_one_end = (gid + 1) * 5500 - 1
-    class_four_start = class_one_start + 800000
-    class_four_end = class_one_end + 800000
+  gid = int(argv[1])
+  class_one_start = gid * 5500
+  class_one_end = (gid + 1) * 5500 - 1
+  class_four_start = class_one_start + 800000
+  class_four_end = class_one_end + 800000
 
   # Load resources
   abbrev = load_helper("/u/cs401/Wordlists/abbrev.english")
@@ -170,26 +165,17 @@ def main(argv):
     for i, line in enumerate(file):
       line = remove_double_quotes(line.split(",")[-1])
 
-      if use_group:
-        print "Training specific lines from the file"
-        # Class 1 tweets
-        if i < class_one_end and i >= class_one_start:
-          lines = parse_line(line, abbrev, pn_abbrev, names, tagger)
-          result_output.write("<A=1>\n")
-          for l in lines:
-            result_output.write(l + "\n")
-
-        # Class 4 tweets
-        if i < class_four_end and i >= class_four_start:
-          lines = parse_line(line, abbrev, pn_abbrev, names, tagger)
-          result_output.write("<A=4>\n")
-          for l in lines:
-            result_output.write(l + "\n")
-      else:
-        print "Training whole file"
-        # Group ID is not specified, normalize whole file
+      # Class 1 tweets
+      if i < class_one_end and i >= class_one_start:
         lines = parse_line(line, abbrev, pn_abbrev, names, tagger)
         result_output.write("<A=1>\n")
+        for l in lines:
+          result_output.write(l + "\n")
+
+      # Class 4 tweets
+      if i < class_four_end and i >= class_four_start:
+        lines = parse_line(line, abbrev, pn_abbrev, names, tagger)
+        result_output.write("<A=4>\n")
         for l in lines:
           result_output.write(l + "\n")
 
