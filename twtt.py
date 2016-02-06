@@ -105,10 +105,10 @@ def punctuation_tokenize(tokens, abbrev, pn_abbrev):
       new_tokens.append(token[:-1])
       new_tokens.append(token[-1])
     # Start litics logic
-    elif token.endswith("'s"):
+    elif token.endswith(("'s", "'m")):
       new_tokens.append(token[:-2])
       new_tokens.append(token[-2:])
-    elif token.endswith(("'ll", "'ve")):
+    elif token.endswith(("'ll", "'ve", "'re")):
       new_tokens.append(token[:-3])
       new_tokens.append(token[-3:])
     elif token.find("'") == len(token) - 2:
