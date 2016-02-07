@@ -18,8 +18,6 @@ def parse_line(line, abbrev, pn_abbrev, names, tagger):
              .replace('&quot;', '"')
 
   # Tokenize the tweet line
-  if line.strip().startswith("mileycyrus"):
-    print line.strip()
   tokens = line.strip().split()
 
   # All URLs are removed
@@ -28,11 +26,6 @@ def parse_line(line, abbrev, pn_abbrev, names, tagger):
   # The first character in Twitter user names
   # (@) and hash tags (#) are removed
   tokens = map(process_hash, tokens)
-
-  find_fingers = False
-  if "mileycyrus" in tokens and "im" in tokens and "gonna" in tokens:
-    find_fingers = True
-    print tokens
 
   # Remove empty token
   tokens = filter(not_empty, tokens)
@@ -52,8 +45,6 @@ def parse_line(line, abbrev, pn_abbrev, names, tagger):
 
   for token, tag in zip(tokens, tags):
     tagged_tokens.append("/".join([token, tag]))
-  #if "mileycyrus/NNS" in tagged_tokens and "im/NN" in tagged_tokens:
-    #print " ".join(tagged_tokens)
 
   # Format the updated tokens to sentence
   return " ".join(tagged_tokens).split("*$$/NN")
