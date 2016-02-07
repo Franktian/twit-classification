@@ -45,7 +45,7 @@ def parse_line(line, abbrev, pn_abbrev, names, tagger):
     tagged_tokens.append("/".join([token, tag]))
 
   # Format the updated tokens to sentence
-  return " ".join(tagged_tokens).split("$$/NN")
+  return " ".join(tagged_tokens).split("||/NN")
 
 
 def not_url(token):
@@ -77,13 +77,13 @@ def sentence_division(tokens, abbrev, pn_abbrev, names):
     #if token.endswith(("...", "!!!")):
       #continue
     if token.endswith((";", ":", "\"")):
-      tokens.insert(i + 1, "$$")
+      tokens.insert(i + 1, "||")
     elif token.endswith(".") and not token.lower() in abbrev \
                              and not token.lower() in pn_abbrev:
-      tokens.insert(i + 1, "$$")
+      tokens.insert(i + 1, "||")
     elif token.endswith(("!", "?")) and i + 1 < len(tokens):
       if not (tokens[i + 1][0].islower() or tokens[i + 1].lower() in names):
-        tokens.insert(i + 1, "$$")
+        tokens.insert(i + 1, "||")
   return tokens
 
 def punctuation_tokenize(tokens, abbrev, pn_abbrev):
