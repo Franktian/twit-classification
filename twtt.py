@@ -137,19 +137,20 @@ def main(argv):
   '''
   Main method, responsible for parsing system args
   '''
-  if len(argv) != 3:
-    print "Wrong parameters specified"
-    return
+  use_training = False
+  if len(argv) == 3:
+    use_training = True
 
   raw_file = argv[0]
-  result_file = argv[2]
+  result_file = argv[-1]
   result_output = open(result_file, 'w')
 
-  gid = int(argv[1])
-  class_one_start = gid * 5500
-  class_one_end = (gid + 1) * 5500 - 1
-  class_four_start = class_one_start + 800000
-  class_four_end = class_one_end + 800000
+  if use_training:
+    gid = int(argv[1])
+    class_one_start = gid * 5500
+    class_one_end = (gid + 1) * 5500 - 1
+    class_four_start = class_one_start + 800000
+    class_four_end = class_one_end + 800000
 
   # Load resources
   abbrev = load_helper("/u/cs401/Wordlists/abbrev.english")
@@ -164,19 +165,18 @@ def main(argv):
 
   with open (raw_file, 'rU') as file:
     for i, line in enumerate(file):
+      class_label = remove_double_quotes(line.split(",")[0])
       line = remove_double_quotes(line.split(",")[-1])
 
-      # Class 1 tweets
-      if i < class_one_end and i >= class_one_start:
+      if use_training:
+        if (i < class_one_end and i >= class_one_start) or (i < class_four_end and i >= class_four_start):
+          lines = parse_line(line, abbrev, pn_abbrev, names, tagger)
+          result_output.write("<A=%s>\n" % class_label)
+          for l in lines:
+            result_output.write(l + "\n")
+      else:
         lines = parse_line(line, abbrev, pn_abbrev, names, tagger)
-        result_output.write("<A=0>\n")
-        for l in lines:
-          result_output.write(l + "\n")
-
-      # Class 4 tweets
-      if i < class_four_end and i >= class_four_start:
-        lines = parse_line(line, abbrev, pn_abbrev, names, tagger)
-        result_output.write("<A=4>\n")
+        result_output.write("<A=%s>\n" % class_label)
         for l in lines:
           result_output.write(l + "\n")
 
