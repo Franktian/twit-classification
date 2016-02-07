@@ -36,8 +36,6 @@ def parse_line(line, abbrev, pn_abbrev, names, tagger):
 
   # Tokenize punctuation and clitics
   tokens = punctuation_tokenize(tokens, abbrev, pn_abbrev)
-  if find_fingers:
-    print tokens
 
   # Tag the token with its part-of-speech
   tags = tagger.tag(tokens)
@@ -47,7 +45,7 @@ def parse_line(line, abbrev, pn_abbrev, names, tagger):
     tagged_tokens.append("/".join([token, tag]))
 
   # Format the updated tokens to sentence
-  return " ".join(tagged_tokens).split("*$$/NN")
+  return " ".join(tagged_tokens).split("$$/NN")
 
 
 def not_url(token):
