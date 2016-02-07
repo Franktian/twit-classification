@@ -42,7 +42,11 @@ def main(argv):
     "sl": sl,
   }
 
-  result_file = open(argv[-1], 'w')
+  result_file = open(argv[1], 'w')
+
+  if len(argv) > 2:
+    max_tweets = int(argv[2])
+  print max_tweets
 
   # Write file header
   result_file.write("@relation %s\n\n" % argv[-1].split(".")[0])
@@ -52,6 +56,7 @@ def main(argv):
   class_names = []
   class_mapping = {}
 
+  '''
   for i, arg in enumerate(argv):
     # First argument starts with a hyphen
     # indicates the maximum number of
@@ -67,14 +72,17 @@ def main(argv):
       else:
         class_name = "".join(map(remove_suffix, class_list))
       class_names.append(class_name)
-      class_mapping[class_name] = class_list
+      class_mapping[class_name] = class_list'''
 
 
-  result_file.write("@attribute class {%s}\n\n" % ", ".join(class_names))
+  result_file.write("@attribute class numeric\n\n")
   result_file.write("@data\n")
 
+  write_data(result_file, 4, ["train.twt"], words, max_tweets)
+
+  '''
   for (class_name, files) in class_mapping.items():
-    write_data(result_file, class_name, files, words, max_tweets)
+    write_data(result_file, class_name, files, words, max_tweets)'''
 
 def write_data(result_file, class_name, files, words, max_tweets):
   tweet = []
@@ -82,8 +90,9 @@ def write_data(result_file, class_name, files, words, max_tweets):
     with open(f, 'rU') as file:
       tweet_count = 0
       for sentence in file:
-        if sentence.strip() == "|":
-          result_file.write(write_data_line(class_name, tweet, words) + "\n")
+        print sentence.strip()
+        if sentence.strip() in  ["<A=0>", "<A=4>"]:
+          result_file.write(write_data_line("Frank", tweet, words) + "\n")
           tweet = []
           tweet_count += 1
           if tweet_count >= max_tweets:
@@ -130,7 +139,10 @@ def count_pronoun(tweet, words, tags):
 def count_helper(tweet, index, tags):
   count = 0
   for sentence in tweet:
+    print sentence
     for word in sentence:
+      print word
+      print index
       if word[index] in tags:
         count += 1
   return count
@@ -174,8 +186,10 @@ def count_avg_sen_len(tweet):
   if len(tweet) > 0:
     for sentence in tweet:
       total_len += len(sentence)
-
-  return total_len / len(tweet)
+  try:
+    return total_len / len(tweet)
+  except Exception:
+    return 0
 
 def count_avg_token_len(tweet):
   total_len = 0

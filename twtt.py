@@ -168,7 +168,7 @@ def main(argv):
       # Class 1 tweets
       if i < class_one_end and i >= class_one_start:
         lines = parse_line(line, abbrev, pn_abbrev, names, tagger)
-        result_output.write("<A=1>\n")
+        result_output.write("<A=0>\n")
         for l in lines:
           result_output.write(l + "\n")
 
