@@ -46,7 +46,6 @@ def main(argv):
 
   if len(argv) > 2:
     max_tweets = int(argv[2])
-  print max_tweets
 
   # Write file header
   result_file.write("@relation %s\n\n" % argv[-1].split(".")[0])
@@ -56,50 +55,27 @@ def main(argv):
   class_names = []
   class_mapping = {}
 
-  '''
-  for i, arg in enumerate(argv):
-    # First argument starts with a hyphen
-    # indicates the maximum number of
-    # tweets will be used
-    if arg.startswith("-") and i == 0:
-      max_tweets = int(arg[1:])
-    elif i < len(argv) - 1:
-      # Variable n classes arguments
-      classes = arg.split(":")
-      class_list = classes[-1].split("+")
-      if len(classes) == 2:
-        class_name = classes[0]
-      else:
-        class_name = "".join(map(remove_suffix, class_list))
-      class_names.append(class_name)
-      class_mapping[class_name] = class_list'''
-
-
   result_file.write("@attribute class numeric\n\n")
   result_file.write("@data\n")
 
-  write_data(result_file, 4, ["train.twt"], words, max_tweets)
+  write_data(result_file, argv[0], words, max_tweets)
 
-  '''
-  for (class_name, files) in class_mapping.items():
-    write_data(result_file, class_name, files, words, max_tweets)'''
 
-def write_data(result_file, class_name, files, words, max_tweets):
+def write_data(result_file, f, words, max_tweets):
   tweet = []
-  for f in files:
-    with open(f, 'rU') as file:
-      tweet_count = 0
-      for sentence in file:
-        print sentence.strip()
-        if sentence.strip() in  ["<A=0>", "<A=4>"]:
-          result_file.write(write_data_line("Frank", tweet, words) + "\n")
-          tweet = []
-          tweet_count += 1
-          if tweet_count >= max_tweets:
-            break
-        else:
-          tokens = sentence.strip().split()
-          tweet.append(map(split_token, tokens))
+  with open(f, 'rU') as file:
+    tweet_count = 0
+    for sentence in file:
+      if sentence.strip() in  ["<A=0>", "<A=4>"]:
+        class_label = sentence.strip()[3]
+        result_file.write(write_data_line(class_label, tweet, words) + "\n")
+        tweet = []
+        tweet_count += 1
+        if tweet_count >= max_tweets:
+          break
+      else:
+        tokens = sentence.strip().split()
+        tweet.append(map(split_token, tokens))
 
 
 def write_data_line(class_name, tweet, words):
@@ -139,10 +115,7 @@ def count_pronoun(tweet, words, tags):
 def count_helper(tweet, index, tags):
   count = 0
   for sentence in tweet:
-    print sentence
     for word in sentence:
-      print word
-      print index
       if word[index] in tags:
         count += 1
   return count
