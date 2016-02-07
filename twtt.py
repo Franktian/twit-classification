@@ -18,6 +18,8 @@ def parse_line(line, abbrev, pn_abbrev, names, tagger):
              .replace('&quot;', '"')
 
   # Tokenize the tweet line
+  if line.strip().startswith("mileycyrus"):
+    print line.strip()
   tokens = line.strip().split()
 
   # All URLs are removed
@@ -27,14 +29,22 @@ def parse_line(line, abbrev, pn_abbrev, names, tagger):
   # (@) and hash tags (#) are removed
   tokens = map(process_hash, tokens)
 
+  find_fingers = False
+  if "mileycyrus" in tokens and "im" in tokens and "gonna" in tokens:
+    find_fingers = True
+    print tokens
+
   # Remove empty token
   tokens = filter(not_empty, tokens)
 
   # Place sentence boundary
   tokens = sentence_division(tokens, abbrev, pn_abbrev, names)
+  
 
   # Tokenize punctuation and clitics
   tokens = punctuation_tokenize(tokens, abbrev, pn_abbrev)
+  if find_fingers:
+    print tokens
 
   # Tag the token with its part-of-speech
   tags = tagger.tag(tokens)
@@ -42,9 +52,11 @@ def parse_line(line, abbrev, pn_abbrev, names, tagger):
 
   for token, tag in zip(tokens, tags):
     tagged_tokens.append("/".join([token, tag]))
+  #if "mileycyrus/NNS" in tagged_tokens and "im/NN" in tagged_tokens:
+    #print " ".join(tagged_tokens)
 
   # Format the updated tokens to sentence
-  return " ".join(tagged_tokens).split("**/NN")
+  return " ".join(tagged_tokens).split("*$$/NN")
 
 
 def not_url(token):
@@ -76,13 +88,13 @@ def sentence_division(tokens, abbrev, pn_abbrev, names):
     #if token.endswith(("...", "!!!")):
       #continue
     if token.endswith((";", ":", "\"")):
-      tokens.insert(i + 1, "**")
+      tokens.insert(i + 1, "$$")
     elif token.endswith(".") and not token.lower() in abbrev \
                              and not token.lower() in pn_abbrev:
-      tokens.insert(i + 1, "**")
+      tokens.insert(i + 1, "$$")
     elif token.endswith(("!", "?")) and i + 1 < len(tokens):
       if not (tokens[i + 1][0].islower() or tokens[i + 1].lower() in names):
-        tokens.insert(i + 1, "**")
+        tokens.insert(i + 1, "$$")
   return tokens
 
 def punctuation_tokenize(tokens, abbrev, pn_abbrev):
