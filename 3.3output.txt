@@ -1,0 +1,76 @@
+ Output with n = 500
+ === Attribute Selection on all input data ===
+
+Search Method:
+	Attribute ranking.
+
+Attribute Evaluator (supervised, Class (nominal): 21 class):
+	Information Gain Ranking Filter
+
+Ranked attributes:
+ 0.0078    14 adverbs
+ 0.0072     5 past_tense_verbs
+ 0          9 dashes
+ 0          7 commas
+ 0          8 colons_and_semi_colons
+ 0          2 second_person_pronouns
+ 0          1 first_person_pronouns
+ 0          6 future_tense_verbs
+ 0          3 third_person_pronouns
+ 0          4 coordinating_conjunctions
+ 0         17 words_all_in_upper_case
+ 0         16 modern_slang_acroynms
+ 0         20 number_of_sentences
+ 0         18 average_length_of_sentences
+ 0         19 average_length_of_tokens
+ 0         11 ellipses
+ 0         10 parentheses
+ 0         15 wh_words
+ 0         12 common_nouns
+ 0         13 proper_nouns
+
+Selected attributes: 14,5,9,7,8,2,1,6,3,4,17,16,20,18,19,11,10,15,12,13 : 20
+*************************************************
+Output with n = 5500
+=== Attribute Selection on all input data ===
+
+Search Method:
+	Attribute ranking.
+
+Attribute Evaluator (supervised, Class (nominal): 21 class):
+	Information Gain Ranking Filter
+
+Ranked attributes:
+ 0.01319   14 adverbs
+ 0.01214    2 second_person_pronouns
+ 0.00797   19 average_length_of_tokens
+ 0.00574    1 first_person_pronouns
+ 0.00393   18 average_length_of_sentences
+ 0.00312   16 modern_slang_acroynms
+ 0.00228    5 past_tense_verbs
+ 0.00201   13 proper_nouns
+ 0.00179    3 third_person_pronouns
+ 0          7 commas
+ 0          4 coordinating_conjunctions
+ 0          6 future_tense_verbs
+ 0         15 wh_words
+ 0         12 common_nouns
+ 0         20 number_of_sentences
+ 0         17 words_all_in_upper_case
+ 0          9 dashes
+ 0          8 colons_and_semi_colons
+ 0         11 ellipses
+ 0         10 parentheses
+
+Selected attributes: 14,2,19,1,18,16,5,13,3,7,4,6,15,12,20,17,9,8,11,10 : 20
+
+What features, if any, retain their importance at both low and high amounts of input data?
+Comparing the results with lower and higher input data, the following features retains importance on both sets:
+- Adverbs
+- Past tense verbs
+- First, second and third person pronouns
+
+Explanation:
+First adverbs are the most commonly used word type in English, there is no surprise to see adverbs ranked first.
+And usually in Twitter you talked about things that just happened before that is why past tense verbs commonly occurred.
+Lastly Twitter is a social media with a lot of interpersonal actions no wonder we see person pronouns quite often.
