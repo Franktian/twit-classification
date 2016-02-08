@@ -109,8 +109,9 @@ def write_data_line(class_name, tweet, words):
   feature_counts.append(count_avg_sen_len(tweet))
   feature_counts.append(count_avg_token_len(tweet))
   feature_counts.append(len(tweet))
+  feature_counts.append(class_name)
 
-  return ",".join(map(stringify, feature_counts)) + "," + class_name
+  return ",".join(map(stringify, feature_counts))
 
 def count_pronoun(tweet, words, tags):
   count = 0
