@@ -64,14 +64,22 @@ def main(argv):
 def write_data(result_file, f, words, max_tweets):
   tweet = []
   with open(f, 'rU') as file:
-    tweet_count = 0
+    class_zero_count = 0
+    class_four_count = 0
     for sentence in file:
       if sentence.strip() in  ["<A=0>", "<A=4>"]:
         class_label = sentence.strip()[3]
-        result_file.write(write_data_line(class_label, tweet, words) + "\n")
+
+        if class_zero_count <= max_tweets and class_label == "0":
+          result_file.write(write_data_line(class_label, tweet, words) + "\n")
+          class_zero_count += 1
+        if class_four_count <= max_tweets and class_label == "4":
+          result_file.write(write_data_line(class_label, tweet, words) + "\n")
+          class_four_count += 1
+
+        # clear tweet buffer after writing to file
         tweet = []
-        tweet_count += 1
-        if tweet_count >= max_tweets:
+        if class_zero_count > max_tweets and class_four_count > max_tweets:
           break
       else:
         tokens = sentence.strip().split()
