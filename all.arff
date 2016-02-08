@@ -20,7 +20,7 @@
 @attribute average_length_of_sentences numeric
 @attribute average_length_of_tokens numeric
 @attribute number_of_sentences numeric
-@attribute class numeric
+@attribute class {0,4}
 
 @data
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0

@@ -55,7 +55,7 @@ def main(argv):
   class_names = []
   class_mapping = {}
 
-  result_file.write("@attribute class numeric\n\n")
+  result_file.write("@attribute class {0,4}\n\n")
   result_file.write("@data\n")
 
   write_data(result_file, argv[0], words, max_tweets)
