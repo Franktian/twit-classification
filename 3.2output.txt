@@ -1,0 +1,14 @@
+Number of training instances      Accuracy
+500                               54.8750 %
+1000                              54.0387 %
+1500                              55.4315 %
+2000                              54.3175 %
+2500                              52.0891 %
+3000                              53.2033 %
+3500                              52.3677 %
+4000                              53.2033 %
+4500                              53.2033 %
+5000                              52.6462 %
+5500                              54.3175 %
+
+From what we have observed on changing the training instances, we don't see any dramatic changes on accuracy from the range 500 to 5500, reflecting on the number of correctly classified it is just two or three, however we have also tried to change the training instances to 50 and see a dramatic drop of accurancy percentage to around 50%, this implies that number of training instances does matter on the accuracy, a reason number would help with classification, however, here it might be the case that our model is not good enough such that passing a certain amount wouldn't be helpful anymore.
