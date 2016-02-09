@@ -65,12 +65,7 @@ Ranked attributes:
 Selected attributes: 14,2,19,1,18,16,5,13,3,7,4,6,15,12,20,17,9,8,11,10 : 20
 
 What features, if any, retain their importance at both low and high amounts of input data?
-Comparing the results with lower and higher input data, the following features retains importance on both sets:
-- Adverbs
-- Past tense verbs
-- First, second and third person pronouns
+Comparing the results with lower and higher input data, adverbs retain same importance on both sets, ranked first with a positive information gain.
 
 Explanation:
-First adverbs are the most commonly used word type in English, there is no surprise to see adverbs ranked first.
-And usually in Twitter you talked about things that just happened before that is why past tense verbs commonly occurred.
-Lastly Twitter is a social media with a lot of interpersonal actions no wonder we see person pronouns quite often.
+Adverbs have a relatively strong relation to the polarity of the tweets that it usually can provide more information compare to other features.
