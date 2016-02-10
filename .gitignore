@@ -3,3 +3,6 @@
 *.english
 BarackObama
 processed/
+*.txt
+*.twt
+*.arff
