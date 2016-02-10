@@ -25,6 +25,8 @@ features = [
   "average_length_of_sentences",
   "average_length_of_tokens",
   "number_of_sentences",
+  "positive_words",
+  "negative_words",
 ]
 
 def main(argv):
@@ -35,11 +37,15 @@ def main(argv):
   sp = load_helper("/u/cs401/Wordlists/Second-person")
   tp = load_helper("/u/cs401/Wordlists/Third-person")
   sl = load_helper("/u/cs401/Wordlists/Slang")
+  positive = load_helper("positive_words")
+  negative = load_helper("negative_words")
   words = {
     "fp": fp,
     "sp": sp,
     "tp": tp,
     "sl": sl,
+    "positive": positive,
+    "negative": negative,
   }
 
   result_file = open(argv[1], 'w')
@@ -109,9 +115,22 @@ def write_data_line(class_name, tweet, words):
   feature_counts.append(count_avg_sen_len(tweet))
   feature_counts.append(count_avg_token_len(tweet))
   feature_counts.append(len(tweet))
+  # Start - extra features for bonus part
+  feature_counts.append(count_positive_negative(tweet, words["positive"]))
+  feature_counts.append(count_positive_negative(tweet, words["negative"]))
+  # End - extra features for bonus part
   feature_counts.append(class_name)
 
   return ",".join(map(stringify, feature_counts))
+
+def count_positive_negative(tweet, words):
+  count = 0
+  for sentence in tweet:
+    for word in sentence:
+      if word[0].lower() in words:
+        count += 1
+  print "counting positive or negative: " + str(count)
+  return count
 
 def count_pronoun(tweet, words, tags):
   count = 0
@@ -122,6 +141,11 @@ def count_pronoun(tweet, words, tags):
   return count
 
 def count_helper(tweet, index, tags):
+  '''
+  Index here means
+  - if 0, count the actual words in tags
+  - if 1, count the tag in tags
+  '''
   count = 0
   for sentence in tweet:
     for word in sentence:

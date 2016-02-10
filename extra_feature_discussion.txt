@@ -1,0 +1,49 @@
+
+Time taken to build model: 0.93 seconds
+Time taken to test model on training data: 0.06 seconds
+
+=== Error on training data ===
+
+Correctly Classified Instances        7130               64.83   %
+Incorrectly Classified Instances      3868               35.17   %
+Kappa statistic                          0.2966
+Mean absolute error                      0.3517
+Root mean squared error                  0.593 
+Relative absolute error                 70.3401 %
+Root relative squared error            118.6087 %
+Total Number of Instances            10998     
+
+
+=== Confusion Matrix ===
+
+    a    b   <-- classified as
+ 3428 2071 |    a = 0
+ 1797 3702 |    b = 4
+
+
+=== Error on test data ===
+
+Correctly Classified Instances         222               61.8384 %
+Incorrectly Classified Instances       137               38.1616 %
+Kappa statistic                          0.2348
+Mean absolute error                      0.3816
+Root mean squared error                  0.6178
+Relative absolute error                 76.3231 %
+Root relative squared error            123.5501 %
+Total Number of Instances              359     
+
+
+=== Confusion Matrix ===
+
+   a   b   <-- classified as
+  93  84 |   a = 0
+  53 129 |   b = 4
+
+
+Discussion:
+
+For the bonus part, we have added two more features for our language model, number of positive words and number of negative words, we have predefined a list of positive and negative words that help with counting these two features, and by adding these two features we have seen some dramatic increase with our classification accuracy. Compare to the output from 3.1 with the original 20 features and an accuracy of around 54%, we increased our accuracy to nearly 62%, which means these two features makes a great contrituion to the classification.
+
+Fun fact: we have put lebron as a positive keyword in our model, if we put lebron as a negative keyword instead, the accuracy drops to 59%, it indicates that a ton of tweets out there were talking about king James and most of them were positive comments back in 2009 - before "The Decision".
+
+Another fun fact: After doing the same thing with Obama, it surprises us that Mr. President  wasn't as hot as Lebron back in 2009, which was just the first year he got into white house.
