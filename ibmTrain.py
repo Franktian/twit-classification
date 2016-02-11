@@ -42,7 +42,6 @@ def convert_training_csv_to_watson_csv_format(input_csv_name, group_id, output_c
       tweet = line.split(",")[-1].strip()
       print i
       if (i <= zero_end and i >= zero_start) or (i <= four_end and i >= four_start):
-        print tweet
         result_file.write(tweet + "," + class_label + "\n")
 	#return None
 
@@ -64,10 +63,17 @@ def extract_subset_from_csv_file(input_csv_file, n_lines_to_extract, output_file
 	#		
 	# Returns:
 	#	None
-	
-	#TODO: Fill in this function
-	
-	return
+
+  result_file = open(output_file_prefix + str(n_lines_to_extract) + ".csv", 'w')
+  zero_start = 0
+  zero_end = zero_start + n_lines_to_extract - 1
+  four_start = zero_start + 5500
+  four_end = four_start + n_lines_to_extract - 1
+
+  with open(input_csv_file, 'rU') as file:
+    for i, line in enumerate(file):
+      if (i <= zero_end and i >= zero_start) or (i <= four_end and i >= four_start):
+        result_file.write(line)
 	
 def create_classifier(username, password, n, input_file_prefix='ibmTrain'):
 	# Creates a classifier using the NLClassifier service specified with username and password.
@@ -107,35 +113,34 @@ def remove_double_quotes(line):
 	
 if __name__ == "__main__":
 	
-	### STEP 1: Convert csv file into two-field watson format
-	input_csv_name = '/u/cs401/A1/tweets/training.1600000.processed.noemoticon.csv'
-	
-	#DO NOT CHANGE THE NAME OF THIS FILE
-	output_csv_name = 'training_11000_watson_style.csv'
-	
-	convert_training_csv_to_watson_csv_format(input_csv_name, 63, output_csv_name)
-	
-	
-	### STEP 2: Save 11 subsets in the new format into ibmTrain#.csv files
-	
-	#TODO: extract all 11 subsets and write the 11 new ibmTrain#.csv files
-	#
-	# you should make use of the following function call:
-	#
-	# n_lines_to_extract = 500
-	# extract_subset_from_csv_file(input_csv,n_lines_to_extract)
-	
-	### STEP 3: Create the classifiers using Watson
-	
-	#TODO: Create all 11 classifiers using the csv files of the subsets produced in 
-	# STEP 2
-	# 
-	#
-	# you should make use of the following function call
-	# n = 500
-	# username = '<ADD USERNAME>'
-	# password = '<ADD PASSWORD>'
-	# create_classifier(username, password, n, input_file_prefix='ibmTrain')
-	
-	
+  ### STEP 1: Convert csv file into two-field watson format
+  input_csv_name = '/u/cs401/A1/tweets/training.1600000.processed.noemoticon.csv'
+
+  #DO NOT CHANGE THE NAME OF THIS FILE
+  output_csv_name = 'training_11000_watson_style.csv'
+
+  convert_training_csv_to_watson_csv_format(input_csv_name, 63, output_csv_name)
+
+  ### STEP 2: Save 11 subsets in the new format into ibmTrain#.csv files
+
+  #TODO: extract all 11 subsets and write the 11 new ibmTrain#.csv files
+  #
+  # you should make use of the following function call:
+  #
+  # n_lines_to_extract = 500
+  extract_subset_from_csv_file(output_csv_name, 500)
+  extract_subset_from_csv_file(output_csv_name, 2500)
+  extract_subset_from_csv_file(output_csv_name, 5000)
+
+  ### STEP 3: Create the classifiers using Watson
+
+  #TODO: Create all 11 classifiers using the csv files of the subsets produced in 
+  # STEP 2
+  # 
+  #
+  # you should make use of the following function call
+  # n = 500
+  # username = '<ADD USERNAME>'
+  # password = '<ADD PASSWORD>'
+  # create_classifier(username, password, n, input_file_prefix='ibmTrain')
 	
