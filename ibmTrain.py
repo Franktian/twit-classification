@@ -29,11 +29,23 @@ def convert_training_csv_to_watson_csv_format(input_csv_name, group_id, output_c
 	#
 	# Returns:
 	#	None
-	
-	#TODO: Fill in this function
-	
-	return
-	
+
+  result_file = open(output_csv_name, 'w')
+  zero_start = group_id * 5500
+  zero_end = (group_id + 1) * 5500 - 1
+  four_start = zero_start + 800000
+  four_end = zero_end + 800000
+
+  with open (input_csv_name, 'rU') as file:
+    for i, line in enumerate(file):
+      class_label = remove_double_quotes(line.split(",")[0])
+      tweet = line.split(",")[-1].strip()
+      print i
+      if (i <= zero_end and i >= zero_start) or (i <= four_end and i >= four_start):
+        print tweet
+        result_file.write(tweet + "," + class_label + "\n")
+	#return None
+
 def extract_subset_from_csv_file(input_csv_file, n_lines_to_extract, output_file_prefix='ibmTrain'):
 	# Extracts n_lines_to_extract lines from a given csv file and writes them to 
 	# an outputfile named ibmTrain#.csv (where # is n_lines_to_extract).
@@ -89,16 +101,19 @@ def create_classifier(username, password, n, input_file_prefix='ibmTrain'):
 	#TODO: Fill in this function
 	
 	return
+
+def remove_double_quotes(line):
+  return line.replace("\"", "")
 	
 if __name__ == "__main__":
 	
 	### STEP 1: Convert csv file into two-field watson format
-	input_csv_name = '<ADD FILENAME HERE>'
+	input_csv_name = '/u/cs401/A1/tweets/training.1600000.processed.noemoticon.csv'
 	
 	#DO NOT CHANGE THE NAME OF THIS FILE
-	output_csv_name 'training_11000_watson_style.csv'
+	output_csv_name = 'training_11000_watson_style.csv'
 	
-	convert_training_csv_to_watson_csv_format(input_csv_name,output_csv_name)
+	convert_training_csv_to_watson_csv_format(input_csv_name, 63, output_csv_name)
 	
 	
 	### STEP 2: Save 11 subsets in the new format into ibmTrain#.csv files
