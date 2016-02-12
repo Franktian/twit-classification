@@ -12,6 +12,8 @@
 #		You may also find it helpful to reuse some of your functions from ibmTrain.py.
 #
 
+import requests
+
 def get_classifier_ids(username,password):
 	# Retrieves a list of classifier ids from a NLClassifier service 
 	# an outputfile named ibmTrain#.csv (where # is n_lines_to_extract).
@@ -29,9 +31,11 @@ def get_classifier_ids(username,password):
 	#	This function should throw an exception if the classifiers call fails for any reason
 	#
 	
-	#TODO: Fill in this function
+  #TODO: Fill in this function
 	
-	return
+  r = requests.get("https://gateway.watsonplatform.net/natural-language-classifier/api/v1/classifiers", auth=(username, password))
+
+  return r.json()
 	
 
 def assert_all_classifiers_are_available(username, password, classifier_id_list):
@@ -114,7 +118,7 @@ def classify_all_texts(username,password,input_csv_name):
         #       and the confidences of all the possible classes (ie the same
         #       format as returned by classify_single_text)
         #       Format example:
-        #              {‘classifiername’:
+        #              {classifiername:
         #                      [
         #                              {'top_class': 'class_name',
         #                              'classes': [
@@ -126,11 +130,11 @@ def classify_all_texts(username,password,input_csv_name):
         #                              ...
         #                              }
         #                      ]
-        #              , ‘classifiername2’:
+        #              , classifiername2:
         #                      [
-        #                      …      
+        #                      
         #                      ]
-        #              …
+        #              
         #              }
         #
         # Error Handling:
@@ -225,14 +229,14 @@ def compute_average_confidence_of_single_classifier(classifier_dict, input_csv_f
 
 if __name__ == "__main__":
 
-	input_test_data = '<ADD FILE NAME HERE>'
-	
-	#STEP 1: Ensure all 11 classifiers are ready for testing
+  input_test_data = '<ADD FILE NAME HERE>'
+
+  #STEP 1: Ensure all 11 classifiers are ready for testing
+  get_classifier_ids("b153156f-444c-452f-bfaa-a3930a5877b9", "dnzjfVHcnvS6")
 	
 	#STEP 2: Test the test data on all classifiers
-	
-	#STEP 3: Compute the accuracy for each classifier
-	
-	#STEP 4: Compute the confidence of each class for each classifier
-	
-	
+
+  #STEP 3: Compute the accuracy for each classifier
+
+  #STEP 4: Compute the confidence of each class for each classifier
+

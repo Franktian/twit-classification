@@ -12,7 +12,8 @@
 
 ###IMPORTS###################################
 #TODO: add necessary imports
-
+import csv
+import requests
 
 ###HELPER FUNCTIONS##########################
 
@@ -36,13 +37,21 @@ def convert_training_csv_to_watson_csv_format(input_csv_name, group_id, output_c
   four_start = zero_start + 800000
   four_end = zero_end + 800000
 
-  with open (input_csv_name, 'rU') as file:
-    for i, line in enumerate(file):
-      class_label = line.split(",")[0]
-      tweet = line.split(",")[-1].strip()
-      print i
+
+  with open (input_csv_name, 'rb') as f:
+    reader = csv.reader(f)
+    for i, line in enumerate(reader):
+      class_label = "\"" + line[0] + "\""
+      tweet = "\"" + line[-1].strip().replace("\t", " ") + "\""
       if (i <= zero_end and i >= zero_start) or (i <= four_end and i >= four_start):
-        result_file.write(tweet + "," + class_label + "\n")
+        if i == 650 + zero_start or i == 651 + zero_start or i == 649 + zero_start:
+          print tweet
+          print line
+        try:
+          s = unicode(tweet + "," + class_label + "\n", "utf-8")
+          result_file.write(s)
+        except Exception:
+          continue
 	#return None
 
 def extract_subset_from_csv_file(input_csv_file, n_lines_to_extract, output_file_prefix='ibmTrain'):
