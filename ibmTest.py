@@ -33,9 +33,10 @@ def get_classifier_ids(username,password):
 	
   #TODO: Fill in this function
 	
-  r = requests.get("https://gateway.watsonplatform.net/natural-language-classifier/api/v1/classifiers", auth=(username, password))
+  r = requests.get("https://gateway.watsonplatform.net/natural-language-classifier/api/v1/classifiers",
+                auth=(username, password))
 
-  return r.json()
+  return map(lambda x: x["classifier_id"], r.json()["classifiers"])
 	
 
 def assert_all_classifiers_are_available(username, password, classifier_id_list):
@@ -232,7 +233,7 @@ if __name__ == "__main__":
   input_test_data = '<ADD FILE NAME HERE>'
 
   #STEP 1: Ensure all 11 classifiers are ready for testing
-  get_classifier_ids("b153156f-444c-452f-bfaa-a3930a5877b9", "dnzjfVHcnvS6")
+  print get_classifier_ids("b153156f-444c-452f-bfaa-a3930a5877b9", "dnzjfVHcnvS6")
 	
 	#STEP 2: Test the test data on all classifiers
 
