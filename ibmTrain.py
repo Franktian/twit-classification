@@ -15,6 +15,8 @@
 import csv
 import requests
 
+NLPSERVICE = "https://gateway.watsonplatform.net/natural-language-classifier/api/v1/classifiers/"
+
 ###HELPER FUNCTIONS##########################
 
 def convert_training_csv_to_watson_csv_format(input_csv_name, group_id, output_csv_name): 
@@ -44,15 +46,8 @@ def convert_training_csv_to_watson_csv_format(input_csv_name, group_id, output_c
       class_label = "\"" + line[0] + "\""
       tweet = "\"" + line[-1].strip().replace("\t", " ") + "\""
       if (i <= zero_end and i >= zero_start) or (i <= four_end and i >= four_start):
-        if i == 650 + zero_start or i == 651 + zero_start or i == 649 + zero_start:
-          print tweet
-          print line
-        try:
-          s = unicode(tweet + "," + class_label + "\n", "utf-8")
-          result_file.write(s)
-        except Exception:
-          continue
-	#return None
+        s = unicode(tweet + "," + class_label + "\n", "utf-8")
+        result_file.write(s)
 
 def extract_subset_from_csv_file(input_csv_file, n_lines_to_extract, output_file_prefix='ibmTrain'):
 	# Extracts n_lines_to_extract lines from a given csv file and writes them to 
@@ -114,8 +109,19 @@ def create_classifier(username, password, n, input_file_prefix='ibmTrain'):
 	#
 	
 	#TODO: Fill in this function
-	
-	return
+
+  files = {
+    'training_data': open(input_file_prefix + str(n) + '.csv', 'rb'),
+    'training_metadata': (input_file_prefix + str(n) + '.csv', '{"language": "en", "name": "Classifier ' + str(n) + '"}'),
+  }
+
+  r = requests.post(NLPSERVICE, files=files, auth=(username, password))
+
+  if r.status_code != 200:
+    raise Exception("Classifier call failed for some reason.")
+
+  return r.json()
+
 
 def remove_double_quotes(line):
   return line.replace("\"", "")
@@ -128,7 +134,7 @@ if __name__ == "__main__":
   #DO NOT CHANGE THE NAME OF THIS FILE
   output_csv_name = 'training_11000_watson_style.csv'
 
-  convert_training_csv_to_watson_csv_format(input_csv_name, 63, output_csv_name)
+  #convert_training_csv_to_watson_csv_format(input_csv_name, 63, output_csv_name)
 
   ### STEP 2: Save 11 subsets in the new format into ibmTrain#.csv files
 
@@ -149,7 +155,10 @@ if __name__ == "__main__":
   #
   # you should make use of the following function call
   # n = 500
-  # username = '<ADD USERNAME>'
-  # password = '<ADD PASSWORD>'
+  username = "b153156f-444c-452f-bfaa-a3930a5877b9"
+  password = "dnzjfVHcnvS6"
   # create_classifier(username, password, n, input_file_prefix='ibmTrain')
-	
+  create_classifier(username, password, 500)
+  create_classifier(username, password, 2500)
+  create_classifier(username, password, 5000)
+
