@@ -38,7 +38,7 @@ def convert_training_csv_to_watson_csv_format(input_csv_name, group_id, output_c
 
   with open (input_csv_name, 'rU') as file:
     for i, line in enumerate(file):
-      class_label = remove_double_quotes(line.split(",")[0])
+      class_label = line.split(",")[0]
       tweet = line.split(",")[-1].strip()
       print i
       if (i <= zero_end and i >= zero_start) or (i <= four_end and i >= four_start):
