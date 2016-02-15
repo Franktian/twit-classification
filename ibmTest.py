@@ -217,10 +217,18 @@ def compute_accuracy_of_single_classifier(classifier_dict, input_csv_file_name):
 	# 	This function should throw an error if there is an issue with the 
 	#	inputs.
 	#
-	
-	#TODO: fill in this function
-	
-	return
+
+  print "Inside compute accuracy"
+  print len(classifier_dict)
+  correct_classification = 0
+
+  with open(input_csv_file_name, 'rb') as f:
+    reader = csv.reader(f)
+    for i, line in enumerate(reader):
+      if line[0] == classifier_dict[i]["top_class"]:
+        correct_classification +=1
+
+  print correct_classification
 
 def compute_average_confidence_of_single_classifier(classifier_dict, input_csv_file_name):
 	# Given a list of "classifications" for a given classifier, compute the average 
@@ -271,13 +279,20 @@ if __name__ == "__main__":
   password = "dnzjfVHcnvS6"
 
   #STEP 1: Ensure all 11 classifiers are ready for testing
-  classifier_ids = get_classifier_ids(username, password)
-  assert_all_classifiers_are_available(username, password, classifier_ids)
+  #classifier_ids = get_classifier_ids(username, password)
+  #assert_all_classifiers_are_available(username, password, classifier_ids)
 	
 	#STEP 2: Test the test data on all classifiers
-  classify_all_texts(username, password, input_test_data)
+  #classify_all_texts(username, password, input_test_data)
 
   #STEP 3: Compute the accuracy for each classifier
+  classifiers = json.load(open("ibmresults.txt"))
+
+  print classifiers["Classifier 2500"]
+
+  #compute_accuracy_of_single_classifier(classifiers["Classifier 5000"], input_test_data)
+  #compute_accuracy_of_single_classifier(classifiers["Classifier 2500"], input_test_data)
+  #compute_accuracy_of_single_classifier(classifiers["Classifier 500"], input_test_data)
 
   #STEP 4: Compute the confidence of each class for each classifier
 
