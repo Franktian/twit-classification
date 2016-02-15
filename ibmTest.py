@@ -94,10 +94,17 @@ def classify_single_text(username,password,classifier_id,text):
 	# Error Handling:
 	#	This function should throw an exception if the classify call fails for any reason 
 	#
-	
-	#TODO: Fill in this function
-	
-	return
+
+  payload = {
+    "text": text
+  }
+
+  r = requests.get(NLPSERVICE + classifier_id + "/classify", auth=(username, password), params=payload)
+
+  if r.status_code != 200:
+    raise Exception("Classify call failed!")
+
+  print r.json()
 
 
 def classify_all_texts(username,password,input_csv_name):
@@ -245,6 +252,7 @@ if __name__ == "__main__":
   assert_all_classifiers_are_available(username, password, classifier_ids)
 	
 	#STEP 2: Test the test data on all classifiers
+  classify_single_text(username, password, "c7fa49x23-nlc-690", "I am happy")
 
   #STEP 3: Compute the accuracy for each classifier
 
