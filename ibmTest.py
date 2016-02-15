@@ -13,6 +13,8 @@
 #
 
 import requests
+import csv
+import json
 
 NLPSERVICE = "https://gateway.watsonplatform.net/natural-language-classifier/api/v1/classifiers/"
 
@@ -104,60 +106,81 @@ def classify_single_text(username,password,classifier_id,text):
   if r.status_code != 200:
     raise Exception("Classify call failed!")
 
-  print r.json()
+  return {
+    "top_class": r.json()["top_class"],
+    "classes": r.json()["classes"],
+  }
 
 
 def classify_all_texts(username,password,input_csv_name):
-        # Classifies all texts in an input csv file using all classifiers for a given NLClassifier
-        # service.
-        #
-        # Inputs:
-        #       username - username for the NLClassifier to be used, as a string
-        #
-        #       password - password for the NLClassifier to be used, as a string
-        #      
-        #       input_csv_name - full path and name of an input csv file in the 
-        #              6 column format of the input test/training files
-        #
-        # Returns:
-        #       A dictionary of lists of "classifications".
-        #       Each dictionary key is the name of a classifier.
-        #       Each dictionary value is a list of "classifications" where a
-        #       "classification" is in the same format as returned by
-        #       classify_single_text.
-        #       Each element in the main dictionary is:
-        #       A list of dictionaries, one for each text, in order of lines in the
-        #       input file. Each element is a dictionary containing the top_class
-        #       and the confidences of all the possible classes (ie the same
-        #       format as returned by classify_single_text)
-        #       Format example:
-        #              {classifiername:
-        #                      [
-        #                              {'top_class': 'class_name',
-        #                              'classes': [
-        #                                        {'class_name': 'myclass', 'confidence': 0.999} ,
-        #                                         {'class_name': 'myclass2', 'confidence': 0.001}
-        #                                          ]
-        #                              },
-        #                              {'top_class': 'class_name',
-        #                              ...
-        #                              }
-        #                      ]
-        #              , classifiername2:
-        #                      [
-        #                      
-        #                      ]
-        #              
-        #              }
-        #
-        # Error Handling:
-        #       This function should throw an exception if the classify call fails for any reason
-        #       or if the input csv file is of an improper format.
-        #
+  # Classifies all texts in an input csv file using all classifiers for a given NLClassifier
+  # service.
+  #
+  # Inputs:
+  #       username - username for the NLClassifier to be used, as a string
+  #
+  #       password - password for the NLClassifier to be used, as a string
+  #      
+  #       input_csv_name - full path and name of an input csv file in the 
+  #              6 column format of the input test/training files
+  #
+  # Returns:
+  #       A dictionary of lists of "classifications".
+  #       Each dictionary key is the name of a classifier.
+  #       Each dictionary value is a list of "classifications" where a
+  #       "classification" is in the same format as returned by
+  #       classify_single_text.
+  #       Each element in the main dictionary is:
+  #       A list of dictionaries, one for each text, in order of lines in the
+  #       input file. Each element is a dictionary containing the top_class
+  #       and the confidences of all the possible classes (ie the same
+  #       format as returned by classify_single_text)
+  #       Format example:
+  #              {classifiername:
+  #                      [
+  #                              {'top_class': 'class_name',
+  #                              'classes': [
+  #                                        {'class_name': 'myclass', 'confidence': 0.999} ,
+  #                                         {'class_name': 'myclass2', 'confidence': 0.001}
+  #                                          ]
+  #                              },
+  #                              {'top_class': 'class_name',
+  #                              ...
+  #                              }
+  #                      ]
+  #              , classifiername2:
+  #                      [
+  #                      
+  #                      ]
+  #              
+  #              }
+  #
+  # Error Handling:
+  #       This function should throw an exception if the classify call fails for any reason
+  #       or if the input csv file is of an improper format.
+  #
 
-        #TODO: Fill in this function
-        
-        return
+  classifier_ids = get_classifier_ids(username, password)
+
+  results = {}
+
+  with open(input_csv_name, 'rb') as f:
+    reader = csv.reader(f)
+    for classifier_id in classifier_ids:
+      r = requests.get(NLPSERVICE + classifier_id, auth=(username, password))
+
+      if r.status_code != 200:
+        raise Exception("Classify call failed")
+
+      classifier = r.json()
+
+      results[classifier["name"]] = []
+
+      # Classify test data
+      for line in reader:
+        results[classifier["name"]].append(classify_single_text(username, password, classifier_id, line))
+
+  return results
 
 
 def compute_accuracy_of_single_classifier(classifier_dict, input_csv_file_name):
@@ -234,15 +257,15 @@ def compute_average_confidence_of_single_classifier(classifier_dict, input_csv_f
 	# 	This function should throw an error if there is an issue with the 
 	#	inputs.
 	#
-	
+
 	#TODO: fill in this function
-	
+
 	return
 
 
 if __name__ == "__main__":
 
-  input_test_data = '<ADD FILE NAME HERE>'
+  input_test_data = '/u/cs401/A1/tweets/testdata.manualSUBSET.2009.06.14.csv'
 
   username = "b153156f-444c-452f-bfaa-a3930a5877b9"
   password = "dnzjfVHcnvS6"
@@ -252,7 +275,7 @@ if __name__ == "__main__":
   assert_all_classifiers_are_available(username, password, classifier_ids)
 	
 	#STEP 2: Test the test data on all classifiers
-  classify_single_text(username, password, "c7fa49x23-nlc-690", "I am happy")
+  classify_all_texts(username, password, input_test_data)
 
   #STEP 3: Compute the accuracy for each classifier
 
