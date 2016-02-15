@@ -14,6 +14,8 @@
 
 import requests
 
+NLPSERVICE = "https://gateway.watsonplatform.net/natural-language-classifier/api/v1/classifiers/"
+
 def get_classifier_ids(username,password):
 	# Retrieves a list of classifier ids from a NLClassifier service 
 	# an outputfile named ibmTrain#.csv (where # is n_lines_to_extract).
@@ -30,14 +32,14 @@ def get_classifier_ids(username,password):
 	# Error Handling:
 	#	This function should throw an exception if the classifiers call fails for any reason
 	#
-	
-  #TODO: Fill in this function
-	
-  r = requests.get("https://gateway.watsonplatform.net/natural-language-classifier/api/v1/classifiers",
-                auth=(username, password))
+
+  r = requests.get(NLPSERVICE, auth=(username, password))
+
+  if r.status_code != 200:
+    raise Exception("Classifier call failed for some reason.")
 
   return map(lambda x: x["classifier_id"], r.json()["classifiers"])
-	
+
 
 def assert_all_classifiers_are_available(username, password, classifier_id_list):
 	# Asserts all classifiers in the classifier_id_list are 'Available' 
@@ -56,10 +58,13 @@ def assert_all_classifiers_are_available(username, password, classifier_id_list)
 	#	This function should throw an exception if the classifiers call fails for any reason AND 
 	#	It should throw an error if any classifier is NOT 'Available'
 	#
-	
-	#TODO: Fill in this function
-	
-	return
+
+  for classifier in classifier_id_list:
+    r = requests.get(NLPSERVICE + classifier, auth=(username, password))
+
+    if r.json()["status"] != "Available" or r.status_code != 200:
+      raise Exception("Classifier call failed or classifier is not ready yet!")
+
 
 def classify_single_text(username,password,classifier_id,text):
 	# Classifies a given text using a single classifier from an NLClassifier 
@@ -232,8 +237,12 @@ if __name__ == "__main__":
 
   input_test_data = '<ADD FILE NAME HERE>'
 
+  username = "b153156f-444c-452f-bfaa-a3930a5877b9"
+  password = "dnzjfVHcnvS6"
+
   #STEP 1: Ensure all 11 classifiers are ready for testing
-  print get_classifier_ids("b153156f-444c-452f-bfaa-a3930a5877b9", "dnzjfVHcnvS6")
+  classifier_ids = get_classifier_ids(username, password)
+  assert_all_classifiers_are_available(username, password, classifier_ids)
 	
 	#STEP 2: Test the test data on all classifiers
 
