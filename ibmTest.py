@@ -161,24 +161,32 @@ def classify_all_texts(username,password,input_csv_name):
   #
 
   classifier_ids = get_classifier_ids(username, password)
-
   results = {}
+  tweets = []
 
+  # Read in the tweets
   with open(input_csv_name, 'rb') as f:
     reader = csv.reader(f)
-    for classifier_id in classifier_ids:
-      r = requests.get(NLPSERVICE + classifier_id, auth=(username, password))
+    for line in reader:
+      tweets.append(line[-1])
 
-      if r.status_code != 200:
-        raise Exception("Classify call failed")
+  # Get classifier names
+  classifier_names = []
+  for classifier_id in classifier_ids:
+    r = requests.get(NLPSERVICE + classifier_id, auth=(username, password))
 
-      classifier = r.json()
+    if r.status_code != 200:
+      raise Exception("Classify call failed")
 
-      results[classifier["name"]] = []
+    classifier = r.json()
+    results[classifier["name"]] = []
+    classifier_names.append(classifier["name"])
 
-      # Classify test data
-      for line in reader:
-        results[classifier["name"]].append(classify_single_text(username, password, classifier_id, line))
+
+  # Classify the data
+  for classifier_id, classifier_name in zip(classifier_ids, classifier_names):
+    for tweet in tweets:
+      results[classifier_name].append(classify_single_text(username, password, classifier_id, tweet))
 
   return results
 
@@ -218,8 +226,6 @@ def compute_accuracy_of_single_classifier(classifier_dict, input_csv_file_name):
 	#	inputs.
 	#
 
-  print "Inside compute accuracy"
-  print len(classifier_dict)
   correct_classification = 0
 
   with open(input_csv_file_name, 'rb') as f:
@@ -228,7 +234,7 @@ def compute_accuracy_of_single_classifier(classifier_dict, input_csv_file_name):
       if line[0] == classifier_dict[i]["top_class"]:
         correct_classification +=1
 
-  print correct_classification
+  return correct_classification / float(len(classifier_dict))
 
 def compute_average_confidence_of_single_classifier(classifier_dict, input_csv_file_name):
 	# Given a list of "classifications" for a given classifier, compute the average 
@@ -283,16 +289,14 @@ if __name__ == "__main__":
   #assert_all_classifiers_are_available(username, password, classifier_ids)
 	
 	#STEP 2: Test the test data on all classifiers
-  #classify_all_texts(username, password, input_test_data)
+  #classifiers = classify_all_texts(username, password, input_test_data)
 
   #STEP 3: Compute the accuracy for each classifier
   classifiers = json.load(open("ibmresults.txt"))
 
-  print classifiers["Classifier 2500"]
-
-  #compute_accuracy_of_single_classifier(classifiers["Classifier 5000"], input_test_data)
-  #compute_accuracy_of_single_classifier(classifiers["Classifier 2500"], input_test_data)
-  #compute_accuracy_of_single_classifier(classifiers["Classifier 500"], input_test_data)
+  compute_accuracy_of_single_classifier(classifiers["Classifier 500"], input_test_data)
+  compute_accuracy_of_single_classifier(classifiers["Classifier 2500"], input_test_data)
+  compute_accuracy_of_single_classifier(classifiers["Classifier 5000"], input_test_data)
 
   #STEP 4: Compute the confidence of each class for each classifier
 
