@@ -134,7 +134,7 @@ if __name__ == "__main__":
   #DO NOT CHANGE THE NAME OF THIS FILE
   output_csv_name = 'training_11000_watson_style.csv'
 
-  #convert_training_csv_to_watson_csv_format(input_csv_name, 63, output_csv_name)
+  convert_training_csv_to_watson_csv_format(input_csv_name, 63, output_csv_name)
 
   ### STEP 2: Save 11 subsets in the new format into ibmTrain#.csv files
 
@@ -157,7 +157,6 @@ if __name__ == "__main__":
   # n = 500
   username = "b153156f-444c-452f-bfaa-a3930a5877b9"
   password = "dnzjfVHcnvS6"
-  # create_classifier(username, password, n, input_file_prefix='ibmTrain')
   create_classifier(username, password, 500)
   create_classifier(username, password, 2500)
   create_classifier(username, password, 5000)
