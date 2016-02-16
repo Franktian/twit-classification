@@ -272,9 +272,23 @@ def compute_average_confidence_of_single_classifier(classifier_dict, input_csv_f
 	#	inputs.
 	#
 
-	#TODO: fill in this function
+  correct_confidence = 0
+  correct_count = 0
+  incorrect_confidence = 0
+  incorrect_count = 0
 
-	return
+  with open(input_csv_file_name, 'rb') as f:
+    reader = csv.reader(f)
+
+    for i, line in enumerate(reader):
+      if line[0] == classifier_dict[i]["top_class"]:
+        correct_confidence += classifier_dict[i]["classes"][0]["confidence"]
+        correct_count += 1
+      else:
+        incorrect_confidence += classifier_dict[i]["classes"][0]["confidence"]
+        incorrect_count += 1
+
+  return (correct_confidence / correct_count, incorrect_confidence / incorrect_count)
 
 
 if __name__ == "__main__":
@@ -299,4 +313,7 @@ if __name__ == "__main__":
   compute_accuracy_of_single_classifier(classifiers["Classifier 5000"], input_test_data)
 
   #STEP 4: Compute the confidence of each class for each classifier
+  print compute_average_confidence_of_single_classifier(classifiers["Classifier 500"], input_test_data)
+  print compute_average_confidence_of_single_classifier(classifiers["Classifier 2500"], input_test_data)
+  print compute_average_confidence_of_single_classifier(classifiers["Classifier 5000"], input_test_data)
 
